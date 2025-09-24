@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionário de Pesquisa: Impacto da REDECON</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 2.2em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+        
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+        
+        .question:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .question-text {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .options {
+            margin-left: 10px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .option:hover {
+            background-color: #f8f9ff;
+        }
+        
+        .option input[type="radio"], 
+        .option input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+            accent-color: #667eea;
+        }
+        
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        textarea, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        textarea:focus, input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        textarea {
+            min-height: 100px;
+        }
+        
+        .submit-container {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e1e5e9;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .error-message {
+            display: none;
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Questionário de Pesquisa: Impacto da REDECON em Empresas Associadas</h1>
+            <p>Este questionário tem como objetivo compreender o impacto da participação na Rede de lojas de Materiais de Construção do Rio Grande do Norte - REDECON sobre a sua empresa e a economia local. Suas respostas são confidenciais e fundamentais para nossa análise.</p>
+            <p>As informações serão utilizadas especificamente para fins acadêmicos. Agradecemos sua valiosa colaboração.</p>
+        </div>
+
+        <form id="redeconForm">
+            <!-- Seção A: Impacto Econômico Local e Percepções -->
+            <div class="section">
+                <h2 class="section-title">Seção A: Impacto Econômico Local e Percepções</h2>
+                
+                <div class="question">
+                    <div class="question-text">1. Desde a entrada na REDECON, o número de funcionários da empresa:</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q1a" name="funcionarios" value="A">
+                            <label for="q1a">A. Aumentou</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1b" name="funcionarios" value="B">
+                            <label for="q1b">B. Permaneceu estável</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1c" name="funcionarios" value="C">
+                            <label for="q1c">C. Diminuiu</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">2. Desde a entrada na REDECON, o faturamento da empresa:</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q2a" name="faturamento" value="A">
+                            <label for="q2a">A. Aumentou</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2b" name="faturamento" value="B">
+                            <label for="q2b">B. Permaneceu estável</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2c" name="faturamento" value="C">
+                            <label for="q2c">C. Diminuiu</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">3. A REDECON contribuiu para a geração de empregos na sua comunidade local?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q3_1" name="geracao_empregos" value="1">
+                            <label for="q3_1">1. Discordo totalmente</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3_2" name="geracao_empregos" value="2">
+                            <label for="q3_2">2. Discordo</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3_3" name="geracao_empregos" value="3">
+                            <label for="q3_3">3. Neutro</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3_4" name="geracao_empregos" value="4">
+                            <label for="q3_4">4. Concordo</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3_5" name="geracao_empregos" value="5">
+                            <label for="q3_5">5. Concordo totalmente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">4. Em que medida a rede contribuiu para a renda local/regional?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q4_1" name="contribuicao_renda" value="1">
+                            <label for="q4_1">1. Sem contribuição</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4_2" name="contribuicao_renda" value="2">
+                            <label for="q4_2">2. Contribuição pequena</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4_3" name="contribuicao_renda" value="3">
+                            <label for="q4_3">3. Contribuição moderada</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4_4" name="contribuicao_renda" value="4">
+                            <label for="q4_4">4. Contribuição grande</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4_5" name="contribuicao_renda" value="5">
+                            <label for="q4_5">5. Contribuição muito grande</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">5. A rede estimula a inovação e a diversificação de produtos/serviços?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q5_1" name="inovacao" value="1">
+                            <label for="q5_1">1. Discordo totalmente</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5_2" name="inovacao" value="2">
+                            <label for="q5_2">2. Discordo</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5_3" name="inovacao" value="3">
+                            <label for="q5_3">3. Neutro</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5_4" name="inovacao" value="4">
+                            <label for="q5_4">4. Concordo</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5_5" name="inovacao" value="5">
+                            <label for="q5_5">5. Concordo totalmente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">6. Avalie o impacto da rede na dinamização econômica do município/região.</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q6_1" name="dinamizacao_economica" value="1">
+                            <label for="q6_1">1. Muito negativo</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q6_2" name="dinamizacao_economica" value="2">
+                            <label for="q6_2">2. Negativo</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q6_3" name="dinamizacao_economica" value="3">
+                            <label for="q6_3">3. Neutro</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q6_4" name="dinamizacao_economica" value="4">
+                            <label for="q6_4">4. Positivo</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q6_5" name="dinamizacao_economica" value="5">
+                            <label for="q6_5">5. Muito positivo</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">7. Na sua percepção, a rede cria encadeamentos positivos com fornecedores e clientes locais?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q7_1" name="encadeamentos" value="1">
+                            <label for="q7_1">1. Discordo totalmente</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q7_2" name="encadeamentos" value="2">
+                            <label for="q7_2">2. Discordo</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q7_3" name="encadeamentos" value="3">
+                            <label for="q7_3">3. Neutro</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q7_4" name="encadeamentos" value="4">
+                            <label for="q7_4">4. Concordo</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q7_5" name="encadeamentos" value="5">
+                            <label for="q7_5">5. Concordo totalmente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">8. Como você avalia a participação da REDECON na promoção de práticas sustentáveis e responsabilidade social?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q8_1" name="sustentabilidade" value="1">
+                            <label for="q8_1">1. Muito ruim</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q8_2" name="sustentabilidade" value="2">
+                            <label for="q8_2">2. Ruim</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q8_3" name="sustentabilidade" value="3">
+                            <label for="q8_3">3. Regular</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q8_4" name="sustentabilidade" value="4">
+                            <label for="q8_4">4. Boa</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q8_5" name="sustentabilidade" value="5">
+                            <label for="q8_5">5. Muito boa</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">9. Qual é o nível de satisfação geral com a REDECON?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q9_1" name="satisfacao_geral" value="1">
+                            <label for="q9_1">1. Muito insatisfeito</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q9_2" name="satisfacao_geral" value="2">
+                            <label for="q9_2">2. Insatisfeito</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q9_3" name="satisfacao_geral" value="3">
+                            <label for="q9_3">3. Neutro</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q9_4" name="satisfacao_geral" value="4">
+                            <label for="q9_4">4. Satisfeito</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q9_5" name="satisfacao_geral" value="5">
+                            <label for="q9_5">5. Muito satisfeito</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">10. Comentários adicionais sobre o impacto da REDECON na sua empresa e na economia local:</div>
+                    <textarea name="comentarios_adiconais" placeholder="Digite seus comentários aqui..."></textarea>
+                </div>
+            </div>
+
+            <!-- Seção B: Participação na REDECON e Competitividade -->
+            <div class="section">
+                <h2 class="section-title">Seção B: Participação na REDECON e Competitividade</h2>
+                
+                <div class="question">
+                    <div class="question-text">11. Principais motivos que levaram sua empresa a integrar a REDECON (marque todas que se aplicam):</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="checkbox" id="q11_precos" name="motivos_integracao" value="Acesso a preços mais competitivos">
+                            <label for="q11_precos">Acesso a preços mais competitivos</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q11_compras" name="motivos_integracao" value="Compras conjuntas">
+                            <label for="q11_compras">Compras conjuntas</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q11_fornecedores" name="motivos_integracao" value="Acesso a novos fornecedores">
+                            <label for="q11_fornecedores">Acesso a novos fornecedores</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q11_capacitacao" name="motivos_integracao" value="Capacitação e treinamentos">
+                            <label for="q11_capacitacao">Capacitação e treinamentos</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q11_marketing" name="motivos_integracao" value="Marketing conjunto">
+                            <label for="q11_marketing">Marketing conjunto</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q11_experiencias" name="motivos_integracao" value="Troca de experiências">
+                            <label for="q11_experiencias">Troca de experiências</label>
+                        </div>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="q11_outro" name="motivos_integracao" value="Outro">
+                        <label for="q11_outro">Outro:</label>
+                        <input type="text" name="motivos_integracao_outro" placeholder="Especifique..." style="margin-left: 10px; flex: 1;">
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">12. Quais benefícios sua empresa obteve até o momento com a participação na REDECON?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q12_1" name="beneficios_obtidos" value="1">
+                            <label for="q12_1">1. Nenhum</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q12_2" name="beneficios_obtidos" value="2">
+                            <label for="q12_2">2. Benefício baixo</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q12_3" name="beneficios_obtidos" value="3">
+                            <label for="q12_3">3. Benefício moderado</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q12_4" name="beneficios_obtidos" value="4">
+                            <label for="q12_4">4. Benefício alto</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q12_5" name="beneficios_obtidos" value="5">
+                            <label for="q12_5">5. Benefício muito alto</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">13. A REDECON contribuiu para a competitividade da sua empresa?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q13_1" name="contribuicao_competitividade" value="1">
+                            <label for="q13_1">1. Discordo totalmente</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q13_2" name="contribuicao_competitividade" value="2">
+                            <label for="q13_2">2. Discordo</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q13_3" name="contribuicao_competitividade" value="3">
+                            <label for="q13_3">3. Neutro</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q13_4" name="contribuicao_competitividade" value="4">
+                            <label for="q13_4">4. Concordo</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q13_5" name="contribuicao_competitividade" value="5">
+                            <label for="q13_5">5. Concordo totalmente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">14. Principais serviços utilizados dentro da REDECON (marque todas que se aplicam):</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="checkbox" id="q14_negociacao" name="servicos_utilizados" value="Negociação de compras">
+                            <label for="q14_negociacao">Negociação de compras</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q14_capacitacao" name="servicos_utilizados" value="Programas de capacitação">
+                            <label for="q14_capacitacao">Programas de capacitação</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q14_marketing" name="servicos_utilizados" value="Marketing compartilhado">
+                            <label for="q14_marketing">Marketing compartilhado</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q14_consultorias" name="servicos_utilizados" value="Consultorias">
+                            <label for="q14_consultorias">Consultorias</label>
+                        </div>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="q14_outro" name="servicos_utilizados" value="Outro">
+                        <label for="q14_outro">Outro:</label>
+                        <input type="text" name="servicos_utilizados_outro" placeholder="Especifique..." style="margin-left: 10px; flex: 1;">
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">15. A rede facilita o acesso a créditos/financiamentos para sua empresa?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q15a" name="acesso_credito" value="A">
+                            <label for="q15a">A. Sim</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q15b" name="acesso_credito" value="B">
+                            <label for="q15b">B. Não</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">16. Avalie a qualidade do relacionamento com outros membros da rede.</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q16_1" name="qualidade_relacionamento" value="1">
+                            <label for="q16_1">1. Muito ruim</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q16_2" name="qualidade_relacionamento" value="2">
+                            <label for="q16_2">2. Ruim</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q16_3" name="qualidade_relacionamento" value="3">
+                            <label for="q16_3">3. Regular</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q16_4" name="qualidade_relacionamento" value="4">
+                            <label for="q16_4">4. Bom</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q16_5" name="qualidade_relacionamento" value="5">
+                            <label for="q16_5">5. Muito bom</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">17. Em quais áreas a REDECON mais contribuiu (marque todas que se aplicam)?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="checkbox" id="q17_custos" name="areas_contribuicao" value="Redução de custos de compra">
+                            <label for="q17_custos">Redução de custos de compra</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q17_vendas" name="areas_contribuicao" value="Ampliação de vendas">
+                            <label for="q17_vendas">Ampliação de vendas</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q17_gestao" name="areas_contribuicao" value="Melhoria da gestão">
+                            <label for="q17_gestao">Melhoria da gestão</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q17_marketing" name="areas_contribuicao" value="Melhoria de marketing">
+                            <label for="q17_marketing">Melhoria de marketing</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q17_contatos" name="areas_contribuicao" value="Expansão de rede de contatos">
+                            <label for="q17_contatos">Expansão de rede de contatos</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q17_inovacao" name="areas_contribuicao" value="Inovação">
+                            <label for="q17_inovacao">Inovação</label>
+                        </div>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="q17_outro" name="areas_contribuicao" value="Outro">
+                        <label for="q17_outro">Outro:</label>
+                        <input type="text" name="areas_contribuicao_outro" placeholder="Especifique..." style="margin-left: 10px; flex: 1;">
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">18. Qual a importância da cooperação entre as empresas para competir com grandes redes de materiais de construção?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q18_1" name="importancia_cooperacao" value="1">
+                            <label for="q18_1">1. Sem importância</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q18_2" name="importancia_cooperacao" value="2">
+                            <label for="q18_2">2. Pouco importante</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q18_3" name="importancia_cooperacao" value="3">
+                            <label for="q18_3">3. Importante</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q18_4" name="importancia_cooperacao" value="4">
+                            <label for="q18_4">4. Muito importante</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q18_5" name="importancia_cooperacao" value="5">
+                            <label for="q18_5">5. Essencial</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">19. Quais dificuldades você encontra ao participar da REDECON?</div>
+                    <textarea name="dificuldades_participacao" placeholder="Digite suas dificuldades aqui..."></textarea>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">20. Sugestões para melhorar a rede:</div>
+                    <textarea name="sugestoes_melhoria" placeholder="Digite suas sugestões aqui..."></textarea>
+                </div>
+            </div>
+
+            <!-- Seção C: Perfil da Empresa -->
+            <div class="section">
+                <h2 class="section-title">Seção C: Perfil da Empresa</h2>
+                
+                <div class="question">
+                    <div class="question-text">21. Nome ou identificação da empresa (opcional, manteremos sigilo):</div>
+                    <input type="text" name="nome_empresa" placeholder="Nome da empresa (opcional)">
+                </div>
+
+                <div class="question">
+                    <div class="question-text">22. Município/localização:</div>
+                    <input type="text" name="municipio_localizacao" placeholder="Município/localização">
+                </div>
+
+                <div class="question">
+                    <div class="question-text">23. Ano de fundação:</div>
+                    <input type="number" name="ano_fundacao" placeholder="Ano de fundação" min="1900" max="2025">
+                </div>
+
+                <div class="question">
+                    <div class="question-text">24. A empresa é de caráter familiar?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q24a" name="carater_familiar" value="A">
+                            <label for="q24a">A. Sim</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q24b" name="carater_familiar" value="B">
+                            <label for="q24b">B. Não</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">25. Número de funcionários:</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q25a" name="numero_funcionarios" value="A">
+                            <label for="q25a">A. 1 a 4</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q25b" name="numero_funcionarios" value="B">
+                            <label for="q25b">B. 5 a 9</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q25c" name="numero_funcionarios" value="C">
+                            <label for="q25c">C. 10 a 19</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q25d" name="numero_funcionarios" value="D">
+                            <label for="q25d">D. 20 a 49</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q25e" name="numero_funcionarios" value="E">
+                            <label for="q25e">E. 50 ou mais</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">26. Faixa de faturamento anual (R$):</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q26a" name="faixa_faturamento" value="A">
+                            <label for="q26a">A. Até 500 mil</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q26b" name="faixa_faturamento" value="B">
+                            <label for="q26b">B. 500 mil a 1 milhão</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q26c" name="faixa_faturamento" value="C">
+                            <label for="q26c">C. 1 a 5 milhões</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q26d" name="faixa_faturamento" value="D">
+                            <label for="q26d">D. 5 a 10 milhões</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q26e" name="faixa_faturamento" value="E">
+                            <label for="q26e">E. Acima de 10 milhões</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">27. Ano de ingresso na REDECON:</div>
+                    <input type="number" name="ano_ingresso_redecon" placeholder="Ano de ingresso" min="2000" max="2025">
+                </div>
+
+                <div class="question">
+                    <div class="question-text">28. Principais produtos comercializados:</div>
+                    <textarea name="principais_produtos" placeholder="Descreva os principais produtos comercializados..."></textarea>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">29. Tempo de participação na REDECON (anos):</div>
+                    <input type="number" name="tempo_participacao_redecon" placeholder="Tempo em anos" min="0" max="50">
+                </div>
+
+                <div class="question">
+                    <div class="question-text">30. Cargo do respondente:</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q30a" name="cargo_respondente" value="A">
+                            <label for="q30a">A. Proprietário(a)</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q30b" name="cargo_respondente" value="B">
+                            <label for="q30b">B. Sócio(a)</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q30c" name="cargo_respondente" value="C">
+                            <label for="q30c">C. Gerente</label>
+                        </div>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q30d" name="cargo_respondente" value="D">
+                        <label for="q30d">D. Outro:</label>
+                        <input type="text" name="cargo_respondente_outro" placeholder="Especifique..." style="margin-left: 10px; flex: 1;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção D: Sucessão Empresarial -->
+            <div class="section">
+                <h2 class="section-title">Seção D: Sucessão Empresarial</h2>
+                
+                <div class="question">
+                    <div class="question-text">31. A empresa é atualmente controlada por qual geração?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q31a" name="geracao_controle" value="A">
+                            <label for="q31a">A. 1ª geração (fundador)</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q31b" name="geracao_controle" value="B">
+                            <label for="q31b">B. 2ª geração</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q31c" name="geracao_controle" value="C">
+                            <label for="q31c">C. 3ª geração</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q31d" name="geracao_controle" value="D">
+                            <label for="q31d">D. 4ª geração ou mais</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">32. Já ocorreu alguma transição de liderança (sucessão) na empresa?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q32a" name="transicao_lideranca" value="A">
+                            <label for="q32a">A. Sim</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q32b" name="transicao_lideranca" value="B">
+                            <label for="q32b">B. Não</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">33. Se sim, qual foi o nível de planejamento da sucessão?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q33a" name="nivel_planejamento_sucessao" value="A">
+                            <label for="q33a">A. Alta (plano formal estruturado)</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q33b" name="nivel_planejamento_sucessao" value="B">
+                            <label for="q33b">B. Moderada (algum planejamento)</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q33c" name="nivel_planejamento_sucessao" value="C">
+                            <label for="q33c">C. Baixa (pouco planejamento)</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q33d" name="nivel_planejamento_sucessao" value="D">
+                            <label for="q33d">D. Nenhum (transição espontânea)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">34. A empresa possui um plano formal de sucessão documentado?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q34a" name="plano_formal_sucessao" value="A">
+                            <label for="q34a">A. Sim</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q34b" name="plano_formal_sucessao" value="B">
+                            <label for="q34b">B. Não</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">35. Principais desafios enfrentados no processo de sucessão (marque todas que se aplicam):</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="checkbox" id="q35_conflitos" name="desafios_sucessao" value="Conflitos familiares">
+                            <label for="q35_conflitos">Conflitos familiares</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q35_preparo" name="desafios_sucessao" value="Falta de preparo do sucessor">
+                            <label for="q35_preparo">Falta de preparo do sucessor</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q35_resistencia" name="desafios_sucessao" value="Resistência do fundador em delegar">
+                            <label for="q35_resistencia">Resistência do fundador em delegar</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q35_orientacao" name="desafios_sucessao" value="Falta de orientação profissional">
+                            <label for="q35_orientacao">Falta de orientação profissional</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q35_financeiras" name="desafios_sucessao" value="Dificuldades financeiras">
+                            <label for="q35_financeiras">Dificuldades financeiras</label>
+                        </div>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="q35_outro" name="desafios_sucessao" value="Outro">
+                        <label for="q35_outro">Outro:</label>
+                        <input type="text" name="desafios_sucessao_outro" placeholder="Especifique..." style="margin-left: 10px; flex: 1;">
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">36. O sucessor foi preparado através de quais instrumentos (marque todas que se aplicam)?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="checkbox" id="q36_participacao" name="preparo_sucessor" value="Participação no negócio desde cedo">
+                            <label for="q36_participacao">Participação no negócio desde cedo</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q36_formacao" name="preparo_sucessor" value="Formação acadêmica específica">
+                            <label for="q36_formacao">Formação acadêmica específica</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q36_cursos" name="preparo_sucessor" value="Cursos e treinamentos">
+                            <label for="q36_cursos">Cursos e treinamentos</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q36_mentoria" name="preparo_sucessor" value="Mentoria do fundador">
+                            <label for="q36_mentoria">Mentoria do fundador</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q36_consultorias" name="preparo_sucessor" value="Consultorias externas">
+                            <label for="q36_consultorias">Consultorias externas</label>
+                        </div>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="q36_outro" name="preparo_sucessor" value="Outro">
+                        <label for="q36_outro">Outro:</label>
+                        <input type="text" name="preparo_sucessor_outro" placeholder="Especifique..." style="margin-left: 10px; flex: 1;">
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">37. Como avalia a contribuição da REDECON para o processo sucessório na sua empresa?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q37_1" name="contribuicao_redecon_sucessao" value="1">
+                            <label for="q37_1">1. Nenhuma</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q37_2" name="contribuicao_redecon_sucessao" value="2">
+                            <label for="q37_2">2. Pequena</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q37_3" name="contribuicao_redecon_sucessao" value="3">
+                            <label for="q37_3">3. Média</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q37_4" name="contribuicao_redecon_sucessao" value="4">
+                            <label for="q37_4">4. Grande</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q37_5" name="contribuicao_redecon_sucessao" value="5">
+                            <label for="q37_5">5. Muito grande</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">38. Idade atual do(s) sucessor(es):</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q38a" name="idade_sucessor" value="A">
+                            <label for="q38a">A. Menos de 25 anos</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q38b" name="idade_sucessor" value="B">
+                            <label for="q38b">B. 25 a 34 anos</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q38c" name="idade_sucessor" value="C">
+                            <label for="q38c">C. 35 a 44 anos</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q38d" name="idade_sucessor" value="D">
+                            <label for="q38d">D. 45 a 54 anos</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q38e" name="idade_sucessor" value="E">
+                            <label for="q38e">E. 55 anos ou mais</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">39. Número de membros da família envolvidos na gestão:</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q39a" name="membros_familia_gestao" value="A">
+                            <label for="q39a">A. 1</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q39b" name="membros_familia_gestao" value="B">
+                            <label for="q39b">B. 2</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q39c" name="membros_familia_gestao" value="C">
+                            <label for="q39c">C. 3 a 5</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q39d" name="membros_familia_gestao" value="D">
+                            <label for="q39d">D. Mais de 5</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">40. Caso não exista plano de sucessão, quais as principais razões (marque todas que se aplicam)?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="checkbox" id="q40_nova" name="razoes_sem_plano_sucessao" value="Empresa muito nova">
+                            <label for="q40_nova">Empresa muito nova</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q40_falta_sucessor" name="razoes_sem_plano_sucessao" value="Falta de sucessor">
+                            <label for="q40_falta_sucessor">Falta de sucessor</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q40_tempo" name="razoes_sem_plano_sucessao" value="Falta de tempo para planejar">
+                            <label for="q40_tempo">Falta de tempo para planejar</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="q40_conhecimento" name="razoes_sem_plano_sucessao" value="Falta de conhecimento sobre como planejar">
+                            <label for="q40_conhecimento">Falta de conhecimento sobre como planejar</label>
+                        </div>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="q40_outro" name="razoes_sem_plano_sucessao" value="Outro">
+                        <label for="q40_outro">Outro:</label>
+                        <input type="text" name="razoes_sem_plano_sucessao_outro" placeholder="Especifique..." style="margin-left: 10px; flex: 1;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="submit-container">
+                <button type="submit" class="submit-btn">Enviar Questionário</button>
+                <div class="loading">Enviando dados...</div>
+                <div class="success-message">Questionário enviado com sucesso! Obrigado pela sua participação.</div>
+                <div class="error-message">Erro ao enviar o questionário. Por favor, tente novamente.</div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('redeconForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.querySelector('.submit-btn');
+            const loading = document.querySelector('.loading');
+            const successMessage = document.querySelector('.success-message');
+            const errorMessage = document.querySelector('.error-message');
+            
+            // Reset messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Show loading
+            submitBtn.style.display = 'none';
+            loading.style.display = 'block';
+            
+            try {
+                const formData = new FormData(this);
+                const data = {};
+                
+                // Collect checkbox values
+                const checkboxGroups = {};
+                
+                for (let [key, value] of formData.entries()) {
+                    if (this.querySelector(`[name="${key}"][type="checkbox"]`)) {
+                        if (!checkboxGroups[key]) {
+                            checkboxGroups[key] = [];
+                        }
+                        checkboxGroups[key].push(value);
+                    } else {
+                        data[key] = value;
+                    }
+                }
+                
+                // Add checkbox groups to data
+                Object.assign(data, checkboxGroups);
+                
+                // Add timestamp
+                data.timestamp = new Date().toISOString();
+                
+                // Convert to CSV format
+                const csvContent = convertToCSV(data);
+                
+                // Download CSV file
+                downloadCSV(csvContent, 'questionario_redecon_' + new Date().toISOString().split('T')[0] + '.csv');
+                
+                // Show success message
+                loading.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Reset form
+                this.reset();
+                
+                setTimeout(() => {
+                    submitBtn.style.display = 'inline-block';
+                    successMessage.style.display = 'none';
+                }, 5000);
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                loading.style.display = 'none';
+                errorMessage.style.display = 'block';
+                submitBtn.style.display = 'inline-block';
+                
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000);
+            }
+        });
+        
+        function convertToCSV(data) {
+            const headers = Object.keys(data);
+            const values = headers.map(header => {
+                const value = data[header];
+                if (Array.isArray(value)) {
+                    return '"' + value.join('; ') + '"';
+                }
+                return '"' + (value || '').toString().replace(/"/g, '""') + '"';
+            });
+            
+            return headers.join(',') + '\n' + values.join(',');
+        }
+        
+        function downloadCSV(csvContent, filename) {
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+        
+        // Optional: Auto-save to localStorage for draft functionality
+        const form = document.getElementById('redeconForm');
+        const inputs = form.querySelectorAll('input, textarea, select');
+        
+        inputs.forEach(input => {
+            input.addEventListener('change', () => {
+                const formData = new FormData(form);
+                const data = {};
+                for (let [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
+                // Note: localStorage is not available in Claude artifacts
+                // This would work in a real environment
+                // localStorage.setItem('redecon_form_draft', JSON.stringify(data));
+            });
+        });
+    </script>
+</body>
+</html>
+                            
